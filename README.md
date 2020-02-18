@@ -177,8 +177,6 @@ Las diferencias entre las 2 indicadas son:
 - db: Activa la auditoría y los datos se almacenarán en la tabla SYS.AUD$ de Oracle.
 - db, extended: Activa la auditoría y los datos se almacenarán en la tabla SYS.AUD$, como en la anterior, pero con la diferencia de que además, se escribirán los valores correspondientes en las columnas SQLBIND y SQLTEXT de la tabla SYS.AUD$.
 
-
-
 ### 7. Localiza en Enterprise Manager las posibilidades para realizar una auditoría e intenta repetir con dicha herramienta los apartados 1, 3 y 4.
 
 
@@ -224,8 +222,29 @@ Podríamos ver que hemos podido realizar una auditoría ya que con esta consulta
 
 ### 9. Averigua si en MySQL se pueden realizar los apartados 1, 3 y 4. Si es así, documenta el proceso adecuadamente.
 
+En MariaDB tan solo tenemos que activar el siguiente parámetro:
 
-SHOW PROFILES;
+~~~
+MariaDB [fernando]> SET SESSION profiling = 1;
+Query OK, 0 rows affected (0.000 sec)
+~~~
+
+Insertamos y actualizamos una tabla:
+
+~~~
+MariaDB [fernando]> insert into Personal values('Z2742487N','Aruna','Sala','Polígono Industrial Aranguren, 2','654066777','braunoz@hotmai.com','1991-07-07');
+Query OK, 1 row affected (0.016 sec)
+
+MariaDB [fernando]> update Personal set DNI = 'Z1742487N' where DNI = 'Z2742487N';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+~~~
+
+Comprobamos:
+
+
+![](img/audimaria.png)
+
 
 ### 10.  Averigua las posibilidades que ofrece MongoDB para auditar los cambios que va sufriendo un documento.
 
