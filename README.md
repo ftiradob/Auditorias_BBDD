@@ -252,5 +252,8 @@ Comprobamos:
 
 ### 11.  Averigua si en MongoDB se pueden auditar los accesos al sistema.
 
+Para auditar los accesos al sistema se usa la siguiente sentencia:
 
-
+~~~
+{ atype: "authenticate", "param.db": "test" }
+~~~
