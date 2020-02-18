@@ -177,14 +177,17 @@ Las diferencias entre las 2 indicadas son:
 - db: Activa la auditoría y los datos se almacenarán en la tabla SYS.AUD$ de Oracle.
 - db, extended: Activa la auditoría y los datos se almacenarán en la tabla SYS.AUD$, como en la anterior, pero con la diferencia de que además, se escribirán los valores correspondientes en las columnas SQLBIND y SQLTEXT de la tabla SYS.AUD$.
 
-### 7. Localiza en Enterprise Manager las posibilidades para realizar una auditoría e intenta repetir con dicha herramienta los apartados 1, 3 y 4.
 
+
+### 7. Localiza en Enterprise Manager las posibilidades para realizar una auditoría e intenta repetir con dicha herramienta los apartados 1, 3 y 4.
 
 
 
 ### 8. Averigua si en Postgres se pueden realizar los apartados 1, 3 y 4. Si es así, documenta el proceso adecuadamente.
 
-ASLJBASKLF
+PostgreSQL no tiene incluida nativamente una herramienta de auditorías, por lo que investigando, he dado con una herramienta creada por la comunidad para poder realizarlas.
+
+Esta herramienta se llama "Audit trigger 91plus" y consiste básicamente en una recopilación de scripts y triggers haciendo uso en parte de PL/pgSQL:
 
 ~~~
 postgres@psqlserver:~$ wget https://raw.githubusercontent.com/2ndQuadrant/audit-trigger/master/audit.sql
@@ -196,25 +199,33 @@ Nos conectamos a postgresql y ejecutamos con \i los comandos del fichero descarg
 postgres=# \i audit.sql
 ~~~
 
-Una vez hecho esto, hacemos un insert en una tabla que tengamos:
+Una vez hecho esto, hacemos varias acciones DML en una tabla que tengamos:
 
 ~~~
 postgres=# insert into jugadores values('E12045-TX','Fernando','Portero');
 INSERT 0 1
+postgres=# update jugadores set nombredeportivo = 'De Gea' where codjugador = 'E12045-TX';
+UPDATE 1
+postgres=# delete from jugadores where codjugador = 'E12045-TX';
+DELETE 1
 ~~~
 
 Y miramos en la tabla que nos indica la documentación las opciones más interesantes:
 
+~~~
+postgres=# select session_user_name, action, table_name, action_tstamp_clk, client_query
+from audit.logged_actions;
+~~~
 
-![](img/audipost.png)
+![](img/audipostfinal.png)
 
 
-Podríamos ver que hemos podido realizar el 3 y 4, ya que con esta consulta hemos podido realizar una auditoría de las consultas DML y de grano fino, ya que hemos visto la sentencia introducida.
+Podríamos ver que hemos podido realizar una auditoría ya que con esta consulta hemos podido visualizar las consultas DML y de grano fino, ya que hemos visto la sentencia introducida.
 
 ### 9. Averigua si en MySQL se pueden realizar los apartados 1, 3 y 4. Si es así, documenta el proceso adecuadamente.
 
 
-
+SHOW PROFILES;
 
 ### 10.  Averigua las posibilidades que ofrece MongoDB para auditar los cambios que va sufriendo un documento.
 
