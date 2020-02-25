@@ -197,6 +197,12 @@ Nos conectamos a postgresql y ejecutamos con \i los comandos del fichero descarg
 postgres=# \i audit.sql
 ~~~
 
+Activamos la recogida de datos de las auditorías:
+
+~~~
+postgres=# select audit.audit_table('jugadores');
+~~~
+
 Una vez hecho esto, hacemos varias acciones DML en una tabla que tengamos:
 
 ~~~
